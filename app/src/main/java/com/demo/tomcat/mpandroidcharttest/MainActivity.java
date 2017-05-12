@@ -73,13 +73,13 @@ public class MainActivity extends AppCompatActivity
         lineChart.setData(new LineData(dataSet));
         //lineChart.setData(getLineData());
         lineChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
-        lineChart.getXAxis().setAxisMaximum(ARRAY_SZ);
-        lineChart.getXAxis().setAxisMinimum(0);
+        lineChart.getXAxis().setAxisMaximum(ARRAY_SZ+1);
+        lineChart.getXAxis().setAxisMinimum(1);
         lineChart.getXAxis().setGranularity(1f);
         lineChart.getXAxis().setValueFormatter(new IAxisValueFormatter() {
             @Override
             public String getFormattedValue(float value, AxisBase axis) {
-                //Log.w(TAG, "setValueFormatter(), value: " + value + ", axis: " + Arrays.toString(axis.mEntries));
+                Log.w(TAG, "setValueFormatter(), value: " + value + ", axis: " + Arrays.toString(axis.mEntries));
                 return ( xLable.get((int)value-1));
             }
         });
