@@ -1,6 +1,5 @@
 package com.demo.tomcat.mpandroidcharttest;
 
-import android.content.Context;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,8 +14,12 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -59,8 +62,11 @@ public class MainActivity extends AppCompatActivity
 
     private void initControl()
     {
+        final String startDateTime = "2016-01-01 15:00:00 GMT";
         List<Entry>  entries = createUserData(ARRAY_SZ);
-        final List<String> xLable = getLabels(ARRAY_SZ);
+        List<Date>  dateTimeList = getDateTimeList(startDateTime, entries.size());
+        //HourAxisValueFormatter  havf = new HourAxisValueFormatter(dateTimeList.get(0).getTime());
+        final List<String> xLable = getLabels(dateTimeList);
         LineDataSet dataSet = new LineDataSet(entries, "°C");
         //XAxis       xAxis = new XAxis();
 
@@ -73,16 +79,21 @@ public class MainActivity extends AppCompatActivity
         lineChart.setData(new LineData(dataSet));
         //lineChart.setData(getLineData());
         lineChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
-        lineChart.getXAxis().setAxisMaximum(ARRAY_SZ+1);
-        lineChart.getXAxis().setAxisMinimum(1);
+        lineChart.getXAxis().setAxisMaximum(dateTimeList.size());
+        lineChart.getXAxis().setAxisMinimum(0);
+
         lineChart.getXAxis().setGranularity(1f);
-        lineChart.getXAxis().setValueFormatter(new IAxisValueFormatter() {
-            @Override
-            public String getFormattedValue(float value, AxisBase axis) {
-                Log.w(TAG, "setValueFormatter(), value: " + value + ", axis: " + Arrays.toString(axis.mEntries));
-                return ( xLable.get((int)value-1));
-            }
-        });
+        //lineChart.getXAxis().setValueFormatter(new IAxisValueFormatter() {
+        //    @Override
+        //    public String getFormattedValue(float value, AxisBase axis) {
+        //        Log.w(TAG, "setValueFormatter(), value: " + value + ", axis: " + Arrays.toString(axis.mEntries));
+        //        return ( xLable.get((int)value-1));
+        //    }
+        //});
+
+
+        HourAxisValueFormatter  havf = new HourAxisValueFormatter(dateTimeList.get(0).getTime());
+        lineChart.getXAxis().setValueFormatter(havf);
 
         lineChart.invalidate();
     }
@@ -130,19 +141,55 @@ public class MainActivity extends AppCompatActivity
         return  entries;
     }
 
-    private List<String> getLabels(int size)
+    private List<Date> getDateTimeList(String startDT, int records)
+    {
+        List<Date>  dtList = new ArrayList<>();
+        SimpleDateFormat    sdf =  new SimpleDateFormat("yyyy-MM-dd hh:mm:ss z");
+        Date    tmpDate = null;
+
+        try
+        {
+            tmpDate = sdf.parse(startDT);
+        }
+        catch (ParseException e)
+        {
+            e.printStackTrace();
+        }
+        dtList.add(tmpDate);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(tmpDate);
+
+        for (int i=1; i<records; i++)
+        {
+            calendar.add(Calendar.MINUTE, 1);
+            //Log.d(TAG, "[" + i +"]: " + calendar.getTime().toString());
+            dtList.add(calendar.getTime());
+        }
+
+        System.out.printf("records: %02d, dtList.size(): %02d %n", records, dtList.size());
+
+        //--- debug
+        for (int i=0; i<dtList.size(); i++)
+        {
+            Log.d(TAG, "[" + i +"]: " + dtList.get(i).toString());
+            //if ((i!=0) && (i%3==0))
+            //    System.out.printf("%n");
+            //System.out.printf("[%02d]: %s, ", i, dtList.get(i));
+        }
+
+        return dtList;
+    }
+
+    private List<String> getLabels(List<Date> tmpDate)
     {
         List<String> chartLabels = new ArrayList<>();
-        for(int i=0; i<size; i++)
+        for(int i=0; i<tmpDate.size(); i++)
         {
             //chartLabels.add("X" + i);
-            chartLabels.add("" + i);
+            chartLabels.add("" + tmpDate.get(i));
         }
         return chartLabels;
     }
-
-
-
 
 }
 
