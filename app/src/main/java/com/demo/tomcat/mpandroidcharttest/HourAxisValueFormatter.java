@@ -13,6 +13,7 @@ import java.util.Locale;
 /**
  * Created by Yasir on 02/06/16.
  */
+
 public class HourAxisValueFormatter implements IAxisValueFormatter
 {
     private long referenceTimestamp; // minimum timestamp in your data set
@@ -23,7 +24,7 @@ public class HourAxisValueFormatter implements IAxisValueFormatter
     {
         this.referenceTimestamp = referenceTimestamp;
         this.mDataFormat = new SimpleDateFormat("HH:mm", Locale.ENGLISH);
-        this.mDate = new Date();
+        this.mDate = new Date(referenceTimestamp);
     }
 
     /**
@@ -39,14 +40,14 @@ public class HourAxisValueFormatter implements IAxisValueFormatter
     public String getFormattedValue(float value, AxisBase axis) {
         //long convertedTimestamp = (long) value;
         // convertedTimestamp = originalTimestamp - referenceTimestamp;
-        long convertedTimestamp = (long) value *100;
+        long convertedTimestamp = (long) value;
 
         // Retrieve original timestamp
         long originalTimestamp = referenceTimestamp + convertedTimestamp;
 
         Log.w("x axis", "getFormattedValue(), value: " + value +
-                ", referenceTimestamp: " + referenceTimestamp +
-                ", originalTimestamp: " + originalTimestamp +
+                //", referenceTimestamp: " + referenceTimestamp +
+                //", originalTimestamp: " + originalTimestamp +
                 ", new date: " + new Date(originalTimestamp));
 
 

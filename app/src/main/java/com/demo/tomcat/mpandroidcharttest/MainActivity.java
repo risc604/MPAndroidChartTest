@@ -62,12 +62,12 @@ public class MainActivity extends AppCompatActivity
 
     private void initControl()
     {
-        final String startDateTime = "2016-01-01 15:00:00 GMT";
-        List<Entry>  entries = createUserData(ARRAY_SZ);
-        List<Date>  dateTimeList = getDateTimeList(startDateTime, entries.size());
+        final String startDateTime = "2016-06-01 15:00:00 GMT";
+        final List<Entry>  entries = createUserData(ARRAY_SZ);
+        final List<Date>  dateTimeList = getDateTimeList(startDateTime, entries.size());
         //HourAxisValueFormatter  havf = new HourAxisValueFormatter(dateTimeList.get(0).getTime());
-        final List<String> xLable = getLabels(dateTimeList);
-        LineDataSet dataSet = new LineDataSet(entries, "°C");
+        //final List<String> xLable = getLabels(dateTimeList);
+        final LineDataSet dataSet = new LineDataSet(entries, "°C");
         //XAxis       xAxis = new XAxis();
 
         // set line color
@@ -79,21 +79,24 @@ public class MainActivity extends AppCompatActivity
         lineChart.setData(new LineData(dataSet));
         //lineChart.setData(getLineData());
         lineChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
-        lineChart.getXAxis().setAxisMaximum(dateTimeList.size());
+        lineChart.getXAxis().setAxisMaximum(dateTimeList.size()-1);
         lineChart.getXAxis().setAxisMinimum(0);
 
         lineChart.getXAxis().setGranularity(1f);
-        //lineChart.getXAxis().setValueFormatter(new IAxisValueFormatter() {
-        //    @Override
-        //    public String getFormattedValue(float value, AxisBase axis) {
-        //        Log.w(TAG, "setValueFormatter(), value: " + value + ", axis: " + Arrays.toString(axis.mEntries));
-        //        return ( xLable.get((int)value-1));
-        //    }
-        //});
+        lineChart.getXAxis().setValueFormatter(new IAxisValueFormatter() {
+            @Override
+            public String getFormattedValue(float value, AxisBase axis) {
+                Log.w(TAG, "setValueFormatter(), value: " + value + ", axis: " + Arrays.toString(axis.mEntries));
+                //if ((int)value ==0)
+                //    return ( getLabels(dateTimeList.get(0)));
+                //else
+                    return ( getLabels(dateTimeList.get((int)value)));
+            }
+        });
 
 
-        HourAxisValueFormatter  havf = new HourAxisValueFormatter(dateTimeList.get(0).getTime());
-        lineChart.getXAxis().setValueFormatter(havf);
+        //HourAxisValueFormatter  havf = new HourAxisValueFormatter(dateTimeList.get(0).getTime());
+        //lineChart.getXAxis().setValueFormatter(havf);
 
         lineChart.invalidate();
     }
@@ -180,13 +183,23 @@ public class MainActivity extends AppCompatActivity
         return dtList;
     }
 
-    private List<String> getLabels(List<Date> tmpDate)
+    private String getLabels(Date tmpDate)
     {
+        SimpleDateFormat    sdf = new SimpleDateFormat("dd HH:mm");
+        return sdf.format(tmpDate);
+    }
+
+
+    private List<String> getLabels_old(List<Date> tmpDate)
+    {
+        SimpleDateFormat    sdf = new SimpleDateFormat("dd HH:mm");
         List<String> chartLabels = new ArrayList<>();
         for(int i=0; i<tmpDate.size(); i++)
         {
             //chartLabels.add("X" + i);
-            chartLabels.add("" + tmpDate.get(i));
+            //chartLabels.add("" + tmpDate.get(i));
+            String tmpStr = sdf.format(tmpDate.get(i));
+            chartLabels.add(tmpStr);
         }
         return chartLabels;
     }
