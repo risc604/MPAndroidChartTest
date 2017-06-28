@@ -26,7 +26,7 @@ import java.util.Random;
 public class MainActivity extends AppCompatActivity
 {
     private final static String TAG = MainActivity.class.getSimpleName();
-    final int   ARRAY_SZ = 100;
+    final int   ARRAY_SZ = 60*3;   //100;
 
     LineChart   lineChart;
 
