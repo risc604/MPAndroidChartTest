@@ -23,7 +23,8 @@ public class HourAxisValueFormatter implements IAxisValueFormatter
     {
         this.referenceTimestamp = referenceTimestamp;
         this.mDataFormat = new SimpleDateFormat("HH:mm", Locale.ENGLISH);
-        this.mDate = new Date();
+        ///this.mDate = new Date();
+        this.mDate = new Date(this.referenceTimestamp);
     }
 
     /**
@@ -39,14 +40,14 @@ public class HourAxisValueFormatter implements IAxisValueFormatter
     public String getFormattedValue(float value, AxisBase axis) {
         //long convertedTimestamp = (long) value;
         // convertedTimestamp = originalTimestamp - referenceTimestamp;
-        long convertedTimestamp = (long) value *100;
+        //long convertedTimestamp = (long) value;
 
         // Retrieve original timestamp
-        long originalTimestamp = referenceTimestamp + convertedTimestamp;
+        long originalTimestamp = referenceTimestamp + (long) (value*1000); //convertedTimestamp;
 
         Log.w("x axis", "getFormattedValue(), value: " + value +
-                ", referenceTimestamp: " + referenceTimestamp +
-                ", originalTimestamp: " + originalTimestamp +
+                //", referenceTimestamp: " + referenceTimestamp +
+                //", originalTimestamp: " + originalTimestamp +
                 ", new date: " + new Date(originalTimestamp));
 
 
@@ -60,7 +61,7 @@ public class HourAxisValueFormatter implements IAxisValueFormatter
 
     private String getHour(long timestamp){
         try{
-            mDate.setTime(timestamp*1000);
+            mDate.setTime(timestamp);
             Log.w("getHour()", "mDate.setTime: " + mDataFormat.format(mDate));
             return mDataFormat.format(mDate);
         }
