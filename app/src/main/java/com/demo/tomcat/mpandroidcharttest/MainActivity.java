@@ -26,7 +26,7 @@ import java.util.Random;
 public class MainActivity extends AppCompatActivity
 {
     private final static String TAG = MainActivity.class.getSimpleName();
-    final int   ARRAY_SZ = 60*3;   //100;
+    final int   ARRAY_SZ = 60 * 3;   //100;
 
     LineChart   lineChart;
 
@@ -104,17 +104,28 @@ public class MainActivity extends AppCompatActivity
     private List<Entry> createUserData(int size)
     {
         final double  MIN = 32.0;
-        final double  MAX = 43.0;
+        final double  MAX = 43.0 - 5;
         double[]    dataObjs = new double[size];
         Random      rand = new Random();
 
         int i=0;
+        double keepX = MIN;
         while (i < size)
         {
             double tmpX = rand.nextDouble() * 100;
             if ((Double.compare(tmpX, MIN) > 0) && (Double.compare(tmpX, MAX) < 1))
             {
-                dataObjs[i++] = tmpX;
+                if (Double.compare(tmpX, keepX) > 0) {
+                    //keepX = tmpX;
+                    Log.w(TAG, "keepX: " + keepX + ", tmpX: " + tmpX + ", i= " + i);
+                    dataObjs[i++] = tmpX;
+                    keepX = tmpX;
+                }
+
+                if (Double.compare(keepX, MAX-0.05) > 0) {
+                 double tmpnum = (MIN + MAX) / 2.0;
+                    keepX = (keepX + tmpnum)/2;
+                }
             }
         }
 
