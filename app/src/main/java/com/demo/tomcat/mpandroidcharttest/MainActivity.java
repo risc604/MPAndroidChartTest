@@ -62,13 +62,11 @@ public class MainActivity extends AppCompatActivity
 
     private void initControl()
     {
-        final String startDateTime = "2016-06-01 15:00:00 GMT";
-        final List<Entry>  entries = createUserData(ARRAY_SZ);
-        final List<Date>  dateTimeList = getDateTimeList(startDateTime, entries.size());
-        //HourAxisValueFormatter  havf = new HourAxisValueFormatter(dateTimeList.get(0).getTime());
-        //final List<String> xLable = getLabels(dateTimeList);
-        final LineDataSet dataSet = new LineDataSet(entries, "°C");
-        //XAxis       xAxis = new XAxis();
+        final String        startDateTime = "2016-06-01 15:00:00 GMT";
+        final List<Entry>   entries = createUserData(ARRAY_SZ);
+        final List<Date>    dateTimeList = getDateTimeList(startDateTime, entries.size());
+        final LineDataSet   dataSet = new LineDataSet(entries, "°C");
+
 
         // set line color
         dataSet.setDrawCircleHole(false);
@@ -77,7 +75,6 @@ public class MainActivity extends AppCompatActivity
 
         // set data to LineChart
         lineChart.setData(new LineData(dataSet));
-        //lineChart.setData(getLineData());
         lineChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
         lineChart.getXAxis().setAxisMaximum(dateTimeList.size()-1);
         lineChart.getXAxis().setAxisMinimum(0);
@@ -104,7 +101,7 @@ public class MainActivity extends AppCompatActivity
     private List<Entry> createUserData(int size)
     {
         final double  MIN = 32.0;
-        final double  MAX = 43.0 - 5;
+        final double  MAX = 43.0;
         double[]    dataObjs = new double[size];
         Random      rand = new Random();
 
@@ -119,13 +116,8 @@ public class MainActivity extends AppCompatActivity
                     //keepX = tmpX;
                     Log.w(TAG, "keepX: " + keepX + ", tmpX: " + tmpX + ", i= " + i);
                     dataObjs[i++] = tmpX;
-                    keepX = tmpX;
                 }
 
-                if (Double.compare(keepX, MAX-0.05) > 0) {
-                 double tmpnum = (MIN + MAX) / 2.0;
-                    keepX = (keepX + tmpnum)/2;
-                }
             }
         }
 
